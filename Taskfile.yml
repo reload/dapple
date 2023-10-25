@@ -1,0 +1,137 @@
+version: '3'
+
+tasks:
+  init:
+    summary: Setup this directory for development
+    deps:
+      - design-system:init
+      - react:init
+      - cms:init
+
+  cleanup:
+    cmds:
+      - rm -rf design-system react cms
+
+  reinit:
+    cmds:
+      - task: cleanup
+      - task: init
+
+  design-system:init:
+    sources:
+      - design-system/yarn.lock
+    generates:
+      - design-system/node_modules/*
+    cmds:
+      - git clone https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
+      - (cd design-system && yarn install)
+
+  design-system:link:
+    deps:
+      - design-system:build
+    dir: design-system
+    generates:
+      - package.json
+    cmds:
+      - npm exec -- json -I -f package.json -e "this.name='@danskernesdigitalebibliotek/dpl-design-system'"
+      - yarn unlink
+      - yarn link
+
+  design-system:build:
+    dir: design-system
+    sources:
+      - src/**/*.scss
+      - src/**/*.js
+      - public/icons/**/*.svg
+    generates:
+      - build/**/*.*
+      - dist.zip
+    cmds:
+      - yarn css:build
+      - ./bundle.sh
+
+  design-system:dev:
+    deps:
+      - design-system:init
+    dir: design-system
+    cmds:
+      - yarn dev
+
+  react:init:
+    sources:
+      - react/yarn.lock
+    generates:
+      - react/node_modules/*
+    cmds:
+      - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
+      - (cd react && yarn install)
+
+  react:link:
+    dir: react
+    deps:
+      - design-system:build
+    cmds:
+      - task: design-system:link
+      - yarn link @danskernesdigitalebibliotek/dpl-design-system
+
+  react:build:
+    dir: react
+    sources:
+      - src/**/*.ts
+      - src/**/*.tsx
+      - src/**/*.js
+      - src/**/*.jsx
+      - src/**/*.scss
+    generates:
+      - dist/dist.zip
+    cmds:
+      - yarn build
+      - (cd dist && zip dist.zip *.js)
+
+  react:dev:
+    dir: react
+    deps:
+      - react:link
+    cmds:
+      - yarn dev
+    env:
+      STORYBOOK_SERVE_PORT: 8001
+
+  cms:init:
+    sources:
+      - cms/composer.lock
+    generates:
+      - cms/vendor/*
+    cmds:
+      - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
+      - (cd cms && task dev:reset)
+
+  cms:link:
+    dir: cms
+    deps:
+      - design-system:build
+      - react:build
+    sources:
+      - ../design-system/dist.zip
+      - ../react/dist/dist.zip
+    cmds:
+      - jq '.require["danskernesdigitalebibliotek/dpl-design-system"] = "*" | .require["danskernesdigitalebibliotek/dpl-react"] = "*"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+      - jq '.repositories[] |= if .type == "package" and .package.name == "danskernesdigitalebibliotek/dpl-design-system" then .package.dist.url = "/deps/design-system/dist.zip" | .package.version = "0.0.0+{{.TIMESTAMP}}" else . end' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+      - jq '.repositories[] |= if .type == "package" and .package.name == "danskernesdigitalebibliotek/dpl-react" then .package.dist.url = "/deps/react/dist/dist.zip" | .package.version = "0.0.0+{{.TIMESTAMP}}" else . end' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
+      - COMPOSE_FILE={{.ROOT_DIR}}/cms/docker-compose.yml:{{.ROOT_DIR}}/docker-compose.cms.yml task dev:cli -- composer update danskernesdigitalebibliotek/dpl-design-system danskernesdigitalebibliotek/dpl-react --no-cache
+      - task dev:cache:clear:all
+    vars:
+      TIMESTAMP:
+        sh: date +%s
+
+  cms:dev:
+    cmds:
+      - task: cms:link
+
+  dev:react:
+    cmds:
+      - npx concurrently "task design-system:build --watch" "task react:dev" --names design-system,react
+
+  dev:cms-react:
+    cmds:
+      - npx concurrently "task react:dev" "task cms:dev --watch" --names react,cms
