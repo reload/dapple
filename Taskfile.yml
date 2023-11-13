@@ -110,18 +110,17 @@ tasks:
       - design-system:build
       - react:build
     cmds:
-      - jq '.require["danskernesdigitalebibliotek/dpl-design-system"] = "*" | .require["danskernesdigitalebibliotek/dpl-react"] = "*"' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-      - jq '.repositories[] |= if .type == "package" and .package.name == "danskernesdigitalebibliotek/dpl-design-system" then .package.dist.url = "/deps/design-system/dist.zip" | .package.version = "0.0.{{.TIMESTAMP}}" else . end' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-      - jq '.repositories[] |= if .type == "package" and .package.name == "danskernesdigitalebibliotek/dpl-react" then .package.dist.url = "/deps/react/dist/dist.zip" | .package.version = "0.0.{{.TIMESTAMP}}" else . end' composer.json > composer.json.tmp && mv composer.json.tmp composer.json
-      - COMPOSE_FILE={{.ROOT_DIR}}/cms/docker-compose.yml:{{.ROOT_DIR}}/docker-compose.cms.yml task dev:cli -- composer update danskernesdigitalebibliotek/dpl-design-system danskernesdigitalebibliotek/dpl-react --no-cache
+      - docker compose up -d
+      - docker compose cp ../design-system/build/. php:/app/web/themes/custom/novel/assets/dpl-design-system
+      - docker compose cp ../react/dist/. php:app/web/libraries/dpl-react
       - task dev:cache:clear:all
-    vars:
-      TIMESTAMP:
-        sh: date +%s
 
   cms:dev:
+    dir: cms
+    deps:
+      - cms:link
     cmds:
-      - task: cms:link
+      - task dev:start
 
   dev:react:
     deps:
