@@ -54,6 +54,7 @@ tasks:
     deps:
       - design-system:init
     dir: design-system
+    run: once
     cmds:
       - yarn dev
 
@@ -92,6 +93,7 @@ tasks:
     dir: react
     deps:
       - react:link
+    run: once
     cmds:
       - yarn dev
 
@@ -124,9 +126,12 @@ tasks:
       - task: cms:link
 
   dev:react:
+    deps:
+      - design-system:build
     cmds:
-      - npx concurrently "task design-system:build --watch" "task react:dev" --names design-system,react
+      - task: react:dev
 
   dev:cms-react:
-    cmds:
-      - npx concurrently "task react:dev" "task cms:dev --watch" --names react,cms
+    deps:
+      - react:dev
+      - cms:dev
