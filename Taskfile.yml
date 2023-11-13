@@ -23,7 +23,8 @@ tasks:
     generates:
       - design-system/node_modules/*
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
+      # TODO: Remove --branch if we decide to continue working with dapple and merge the support branch
+      - git clone --branch dapple-support https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
       - (cd design-system && yarn install)
 
   design-system:link:
@@ -33,7 +34,6 @@ tasks:
     generates:
       - package.json
     cmds:
-      - npm exec -- json -I -f package.json -e "this.name='@danskernesdigitalebibliotek/dpl-design-system'"
       - yarn unlink
       - yarn link
 
@@ -62,7 +62,8 @@ tasks:
     generates:
       - react/node_modules/*
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
+      # TODO: Remove --branch if we decide to continue working with dapple
+      - git clone --branch dapple-support https://github.com/danskernesdigitalebibliotek/dpl-react react
       - (cd react && yarn install)
 
   react:link:
