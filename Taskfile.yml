@@ -94,8 +94,6 @@ tasks:
       - react:link
     cmds:
       - yarn dev
-    env:
-      STORYBOOK_SERVE_PORT: 8001
 
   cms:init:
     sources:
