@@ -51,8 +51,6 @@ tasks:
       - ./bundle.sh
 
   design-system:dev:
-    deps:
-      - design-system:init
     dir: design-system
     run: once
     cmds:
