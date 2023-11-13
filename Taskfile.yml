@@ -130,5 +130,9 @@ tasks:
 
   dev:cms-react:
     deps:
-      - react:dev
       - cms:dev
+    cmds:
+      # react:dev has an interactive prompt about port assignment as we try to
+      # run it on port 80 by default. To allow the user to reply we have to run
+      # it as a separate task instead of a dependency.
+      - task: react:dev
