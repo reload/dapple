@@ -4,7 +4,7 @@ Dapple is an attempt at providing a unified workflow for three DPL projects:
 
 - [Design system](https://github.com/danskernesdigitalebibliotek/dpl-design-system)
 - [React components](https://github.com/danskernesdigitalebibliotek/dpl-react)
-- [CMS]((https://github.com/danskernesdigitalebibliotek/dpl-cms))
+- [CMS](https://github.com/danskernesdigitalebibliotek/dpl-cms)
 
 These projects recide in separate repositories but are used by one another to 
 provide a complete application. While there is an established workflow for
