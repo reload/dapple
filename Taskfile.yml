@@ -69,9 +69,8 @@ tasks:
   react:link:
     dir: react
     deps:
-      - design-system:build
+      - design-system:link
     cmds:
-      - task: design-system:link
       - yarn link @danskernesdigitalebibliotek/dpl-design-system
 
   react:build:
