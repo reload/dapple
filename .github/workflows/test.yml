@@ -44,3 +44,5 @@ jobs:
           (cd .. && task cms:link)
           task ci:cypress
         working-directory: cms
+        env:
+          COMPOSE_PROJECT_NAME: dapple
