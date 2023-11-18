@@ -14,7 +14,10 @@ tasks:
 
   cleanup:
     cmds:
-      - rm -rf design-system react cms
+      - cmd: rm -rf design-system react cms
+        # This may fail due to permission problems. Continue regardless to see
+        # if Dapple works in a partial envinronment.
+        ignore_error: true
 
   reinit:
     cmds:
