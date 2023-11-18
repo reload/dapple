@@ -41,7 +41,8 @@ tasks:
     generates:
       - package.json
     cmds:
-      - yarn unlink
+      - cmd: yarn unlink
+        ignore_error: true
       - yarn link
 
   design-system:build:
