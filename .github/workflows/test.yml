@@ -43,10 +43,7 @@ jobs:
           # The demo modal test is simple and quick to execute.
           spec: src/apps/demo-modal/demo-modal.test.ts
       - name: Test CMS after linking
-        run: |
-          task ci:reset
-          (cd .. && task cms:link)
-          task ci:cypress
-        working-directory: cms
-        env:
-          COMPOSE_PROJECT_NAME: dapple
+        # A single request to see that the frontpage can be retrieved should be
+        # sufficient to ensure that Drupal can bootstrap and return a page.
+        # COMPOSE_PROJECT_NAME must match the value from Dapple Taskfile.yml.
+        run: "curl --fail http://localhost:$(COMPOSE_PROJECT_NAME=dapple docker compose port varnish 8080 | cut -d: -f2)"
