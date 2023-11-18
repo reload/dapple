@@ -1,5 +1,9 @@
 version: '3'
 
+env:
+  # Set project name to avoid conflicts with single checkouts.
+  COMPOSE_PROJECT_NAME: dapple
+
 tasks:
   init:
     summary: Setup this directory for development
