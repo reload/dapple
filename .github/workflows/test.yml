@@ -3,6 +3,10 @@ name: Test
 on:
   push:
 
+env:
+  # Group output as we make heavy use of parallel and nested tasks.
+  TASK_OUTPUT: "--output group --output-group-begin '::group::{{.TASK}}' --output-group-end '::endgroup::'"
+
 jobs:
   test:
     runs-on: ubuntu-22.04
@@ -22,15 +26,15 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Initialize environment
-        run: task init
+        run: "task init ${{ env.TASK_OUTPUT }}"
       - name: Link Design system to React components
-        run: task react:link
+        run: "task react:link ${{ env.TASK_OUTPUT }}"
       - name: Link Design system and React components to CMS
-        run: task cms:link
+        run: "task cms:link ${{ env.TASK_OUTPUT }}"
       - name: Link Design system to React components (again)
-        run: task react:link
+        run: "task react:link ${{ env.TASK_OUTPUT }}"
       - name: Link Design system and React components to CMS (again)
-        run: task cms:link
+        run: "task cms:link ${{ env.TASK_OUTPUT }}"
       - name: Test React components after linking
         uses: cypress-io/github-action@v6
         with:
