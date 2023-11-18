@@ -1,0 +1,29 @@
+name: Test
+
+on:
+  push:
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          # TODO replace which with what can be read from .nvmrc if we get a
+          # separation between checkout and install
+          node-version: 'lts/*'
+          registry-url: 'https://npm.pkg.github.com'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup go-task
+        uses: arduino/setup-task@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Initialize environment
+        run: task init
+      - name: Link Design system to React components
+        run: task react:link
+      - name: Link Design system and React components to CMS
+        run: task cms:link
