@@ -1,5 +1,7 @@
 version: '3'
 
+output: prefixed
+
 env:
   # Set project name to avoid conflicts with single checkouts.
   COMPOSE_PROJECT_NAME: dapple
