@@ -27,3 +27,20 @@ jobs:
         run: task react:link
       - name: Link Design system and React components to CMS
         run: task cms:link
+      - name: Test React components after linking
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn start:storybook:test
+          wait-on: "http://localhost:57021"
+          browser: chrome
+          working-directory: react
+          # A single test should be sufficient to ensure that Storybook can
+          # start, the React components work etc. after linking.
+          # The demo modal test is simple and quick to execute.
+          spec: src/apps/demo-modal/demo-modal.test.ts
+      - name: Test CMS after linking
+        run: |
+          task ci:reset
+          (cd .. && task cms:link)
+          task ci:cypress
+        working-directory: cms
