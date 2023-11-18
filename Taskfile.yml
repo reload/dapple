@@ -101,7 +101,8 @@ tasks:
     generates:
       - cms/vendor/*
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
+      # TODO: Remove --branch if we decide to continue working with dapple
+      - git clone --branch dapple-support https://github.com/danskernesdigitalebibliotek/dpl-cms cms
       - (cd cms && task dev:reset)
 
   cms:link:
