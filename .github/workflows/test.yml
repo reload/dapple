@@ -72,3 +72,7 @@ jobs:
         # a difference. Reverse this using !.
         run: |
           ! diff ${{ runner.temp }}/design-system/base.before.css ${{ runner.temp }}/design-system/base.after.css
+      - name: Setup tmate session to support debugging if enabled
+        if:  runner.debug == '1'
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
