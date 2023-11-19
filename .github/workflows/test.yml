@@ -51,3 +51,24 @@ jobs:
         # sufficient to ensure that Drupal can bootstrap and return a page.
         # COMPOSE_PROJECT_NAME must match the value from Dapple Taskfile.yml.
         run: "curl --fail http://localhost:$(COMPOSE_PROJECT_NAME=dapple docker compose port varnish 8080 | cut -d: -f2)"
+      # Test that changes to design system results in changes in React component dependencies
+      - name: Store current build of Design system in React components
+        run: |
+          mkdir ${{ runner.temp }}/design-system
+          cp node_modules/@danskernesdigitalebibliotek/dpl-design-system/build/css/base.css ${{ runner.temp }}/design-system/base.before.css
+        working-directory: react
+      - name: Update design system file
+        run: |
+          echo -e "\nh1 { color: pink; }\n" >> src/stories/Library/typography/typography.scss
+        working-directory: design-system
+      - name: Build Design system
+        run: "task design-system:build ${{ env.TASK_OUTPUT }}"
+      - name: Store new build of Design system in React components
+        run: |
+          cp node_modules/@danskernesdigitalebibliotek/dpl-design-system/build/css/base.css ${{ runner.temp }}/design-system/base.after.css
+        working-directory: react
+      - name: Ensure there is a difference between design system builds in React components
+        # We expect a difference and diff will return an error code if there is
+        # a difference. Reverse this using !.
+        run: |
+          ! diff ${{ runner.temp }}/design-system/base.before.css ${{ runner.temp }}/design-system/base.after.css
