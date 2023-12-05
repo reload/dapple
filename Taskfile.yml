@@ -156,6 +156,10 @@ tasks:
     cmds:
       - task: react:dev
 
+  dev:cms:
+    deps:
+      - task: cms:dev
+
   dev:cms-react:
     deps:
       - cms:dev
