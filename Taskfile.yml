@@ -77,6 +77,8 @@ tasks:
   react:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
+      - cp react/.env.example react/.env
+      - echo "COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}-react" >> react/.env
 
   react:link:
     dir: react
@@ -115,6 +117,7 @@ tasks:
   cms:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
+      - sed "s|COMPOSE_PROJECT_NAME=dpl-cms|COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}-cms|g" <cms/.env.example >cms/.env
 
   cms:link:
     dir: cms
