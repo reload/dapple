@@ -36,15 +36,15 @@ three projects with direct links between each of them.
 
 ### React component development
 
-1. Run `task dev:react --watch` to start the development environment
+1. Run `task dev:react` to start the development environment
 2. See that Storybook for the React components are opened in a browser
 3. Make a change in the local `design-system` project
 4. See that the change triggers a build of the design system
 5. See the change is reflected in the Storybook browser window
 
-### CMS development
+### CMS and React component development
 
-1. Run `task dev:cms-react --watch` to start the development environment
+1. Run `task dev:cms-react` to start the development environment
 2. Open a browser to see the CMS installation
 3. Make a change in the local `design-system` project
 4. See that the change triggers a build of the design system

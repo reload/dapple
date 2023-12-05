@@ -164,17 +164,20 @@ tasks:
       - task dev:reset
 
   dev:react:
+    watch: true
     deps:
       - design-system:build
     cmds:
       - task: react:dev
 
   dev:cms:
+    watch: true
     cmds:
       - task: cms:dev
       - task: cms:link
 
   dev:cms-react:
+    watch: true
     deps:
       - cms:dev
     cmds:
