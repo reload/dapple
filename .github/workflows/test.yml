@@ -75,6 +75,29 @@ jobs:
         # a difference. Reverse this using !.
         run: |
           ! diff ${{ runner.temp }}/design-system/base.before.css ${{ runner.temp }}/design-system/base.after.css
+      - name: Store info on current build of React components in CMS
+        run: |
+          mkdir ${{ runner.temp }}/react
+          docker compose cp php:app/web/libraries/dpl-react/version.json ${{ runner.temp }}/react/version.before.json
+        working-directory: cms
+      - name: Update React component
+        run: |
+          echo -e "\nconsole.log('Hello world!');\n" >> src/apps/hello-world/hello-world.tsx
+        working-directory: react
+      - name: Build React components for CMS
+        # Normally this would happen automatically through file watchers when
+        # files are changed. We are not running with file watchers in GitHub
+        # actions so updated links to the CMS automatically.
+        run: "task cms:link ${{ env.TASK_OUTPUT }}"
+      - name: Store new build of React components in CMS
+        run: |
+          docker compose cp php:app/web/libraries/dpl-react/version.json ${{ runner.temp }}/react/version.after.json
+        working-directory: cms
+      - name: Ensure there is a difference between React builds in CMS
+        # We expect a difference and diff will return an error code if there is
+        # a difference. Reverse this using !.
+        run: |
+          ! diff ${{ runner.temp }}/react/version.before.json ${{ runner.temp }}/react/version.after.json
       - name: Reset environment
         run: "task reset ${{ env.TASK_OUTPUT }}"
       - name: Setup tmate session to support debugging if enabled
