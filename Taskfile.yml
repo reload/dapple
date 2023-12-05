@@ -97,11 +97,8 @@ tasks:
       - src/**/*.js
       - src/**/*.jsx
       - src/**/*.scss
-    generates:
-      - dist/dist.zip
     cmds:
       - yarn build
-      - (cd dist && zip dist.zip *.js)
 
   react:dev:
     dir: react
