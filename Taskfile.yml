@@ -99,6 +99,13 @@ tasks:
       - src/**/*.scss
     cmds:
       - yarn build
+    env:
+      # Create an updated version.json file for our build.
+      # This file is parsed by Drupal and the version added as query parameter
+      # for JavaScript assets. An updated value will help bust caches.
+      VERSION_FILE_NAME: "dapple"
+      VERSION_FILE_VERSION:
+        sh: 'echo "0.0.0-$(date +%s)"'
 
   react:dev:
     dir: react
