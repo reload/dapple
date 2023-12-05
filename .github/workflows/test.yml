@@ -27,6 +27,8 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Initialize environment
         run: "task init ${{ env.TASK_OUTPUT }}"
+      - name: Prepare CMS for development
+        run: "task cms:dev ${{ env.TASK_OUTPUT }}"
       - name: Link Design system to React components
         run: "task react:link ${{ env.TASK_OUTPUT }}"
       - name: Link Design system and React components to CMS
@@ -98,8 +100,6 @@ jobs:
         # a difference. Reverse this using !.
         run: |
           ! diff ${{ runner.temp }}/react/version.before.json ${{ runner.temp }}/react/version.after.json
-      - name: Reset environment
-        run: "task reset ${{ env.TASK_OUTPUT }}"
       - name: Setup tmate session to support debugging if enabled
         if:  runner.debug == '1'
         uses: mxschmitt/action-tmate@v3

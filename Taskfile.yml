@@ -15,7 +15,7 @@ tasks:
       - react:clone
       - cms:clone
     cmds:
-      - task: reset
+      - task: install
 
   cleanup:
     cmds:
@@ -29,16 +29,26 @@ tasks:
       - task: cleanup
       - task: init
 
-  reset:
-    summary: Reset environment. This is useful when switching between tasks, branches etc.
+  install:
+    summary: (Re)install all dependencies.
     deps:
-      - design-system:reset
-      - react:reset
-      - cms:reset
+      - design-system:install
+      - react:install
+      - cms:install
 
   design-system:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
+
+  design-system:install:
+    dir: design-system
+    sources:
+      - package.json
+      - yarn.lock
+    generates:
+      - node_modules/*
+    cmds:
+      - yarn install
 
   design-system:link:
     deps:
@@ -70,17 +80,22 @@ tasks:
     cmds:
       - yarn dev
 
-  design-system:reset:
-    dir: design-system
-    cmds:
-      - yarn install
-
   react:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
       # Set project name to avoid conflicts with single checkouts.
       - cp react/.env.example react/.env
       - echo "COMPOSE_PROJECT_NAME={{.REACT_COMPOSE_PROJECT_NAME}}" >> react/.env
+
+  react:install:
+    dir: react
+    sources:
+      - package.json
+      - yarn.lock
+    generates:
+      - node_modules/*
+    cmds:
+      - yarn install
 
   react:link:
     dir: react
@@ -116,16 +131,20 @@ tasks:
     cmds:
       - yarn dev
 
-  react:reset:
-    dir: react
-    cmds:
-      - yarn install
-
   cms:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
       # Set project name to avoid conflicts with single checkouts.
       - sed "s|COMPOSE_PROJECT_NAME=dpl-cms|COMPOSE_PROJECT_NAME={{.CMS_COMPOSE_PROJECT_NAME}}|g" <cms/.env.example >cms/.env
+
+  cms:install:
+    dir: cms
+    sources:
+      - composer.lock
+    generates:
+      - vendor/*
+    cmds:
+      - task dev:cli -- composer install
 
   cms:link:
     dir: cms
@@ -140,13 +159,7 @@ tasks:
 
   cms:dev:
     dir: cms
-    deps:
-      - cms:link
-    cmds:
-      - task dev:start
-
-  cms:reset:
-    dir: cms
+    run: once
     cmds:
       - task dev:reset
 
@@ -157,8 +170,9 @@ tasks:
       - task: react:dev
 
   dev:cms:
-    deps:
+    cmds:
       - task: cms:dev
+      - task: cms:link
 
   dev:cms-react:
     deps:
@@ -168,3 +182,4 @@ tasks:
       # run it on port 80 by default. To allow the user to reply we have to run
       # it as a separate task instead of a dependency.
       - task: react:dev
+      - task: cms:link
