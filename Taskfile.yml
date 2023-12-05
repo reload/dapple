@@ -26,6 +26,13 @@ tasks:
       - task: cleanup
       - task: init
 
+  reset:
+    summary: Reset environment. This is useful when switching between tasks, branches etc.
+    deps:
+      - design-system:reset
+      - react:reset
+      - cms:reset
+
   design-system:init:
     sources:
       - design-system/yarn.lock
@@ -65,6 +72,11 @@ tasks:
     cmds:
       - yarn dev
 
+  design-system:reset:
+    dir: design-system
+    cmds:
+      - yarn install
+
   react:init:
     sources:
       - react/yarn.lock
@@ -103,6 +115,11 @@ tasks:
     cmds:
       - yarn dev
 
+  react:reset:
+    dir: react
+    cmds:
+      - yarn install
+
   cms:init:
     sources:
       - cms/composer.lock
@@ -129,6 +146,11 @@ tasks:
       - cms:link
     cmds:
       - task dev:start
+
+  cms:reset:
+    dir: cms
+    cmds:
+      - task dev:reset
 
   dev:react:
     deps:
