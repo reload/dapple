@@ -10,9 +10,11 @@ tasks:
   init:
     summary: Setup this directory for development
     deps:
-      - design-system:init
-      - react:init
-      - cms:init
+      - design-system:clone
+      - react:clone
+      - cms:clone
+    cmds:
+      - task: reset
 
   cleanup:
     cmds:
@@ -33,14 +35,9 @@ tasks:
       - react:reset
       - cms:reset
 
-  design-system:init:
-    sources:
-      - design-system/yarn.lock
-    generates:
-      - design-system/node_modules/*
+  design-system:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
-      - (cd design-system && yarn install)
 
   design-system:link:
     deps:
@@ -77,14 +74,9 @@ tasks:
     cmds:
       - yarn install
 
-  react:init:
-    sources:
-      - react/yarn.lock
-    generates:
-      - react/node_modules/*
+  react:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
-      - (cd react && yarn install)
 
   react:link:
     dir: react
@@ -120,14 +112,9 @@ tasks:
     cmds:
       - yarn install
 
-  cms:init:
-    sources:
-      - cms/composer.lock
-    generates:
-      - cms/vendor/*
+  cms:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
-      - (cd cms && task dev:reset)
 
   cms:link:
     dir: cms
