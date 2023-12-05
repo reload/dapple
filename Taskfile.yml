@@ -112,6 +112,7 @@ tasks:
     deps:
       - react:link
     run: once
+    interactive: true
     cmds:
       - yarn dev
 
