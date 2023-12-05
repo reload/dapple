@@ -47,10 +47,13 @@ jobs:
           # The demo modal test is simple and quick to execute.
           spec: src/apps/demo-modal/demo-modal.test.ts
       - name: Test CMS after linking
+        working-directory: cms
         # A single request to see that the frontpage can be retrieved should be
         # sufficient to ensure that Drupal can bootstrap and return a page.
-        # COMPOSE_PROJECT_NAME must match the value from Dapple Taskfile.yml.
-        run: "curl --fail http://localhost:$(COMPOSE_PROJECT_NAME=dapple docker compose port varnish 8080 | cut -d: -f2)"
+        # If we can get ports for running containers in the CMS directory after
+        # initializing then docker commands within the subdirectory will work
+        # with the Dapple-initiated containers as expected.
+        run: "curl --fail http://localhost:$(docker compose port varnish 8080 | cut -d: -f2)"
       # Test that changes to design system results in changes in React component dependencies
       - name: Store current build of Design system in React components
         run: |

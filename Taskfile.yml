@@ -2,9 +2,10 @@ version: '3'
 
 output: prefixed
 
-env:
-  # Set project name to avoid conflicts with single checkouts.
-  COMPOSE_PROJECT_NAME: dapple
+vars:
+  COMPOSE_PREFIX: dapple
+  CMS_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-cms"
+  REACT_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-react"
 
 tasks:
   init:
@@ -77,8 +78,9 @@ tasks:
   react:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
+      # Set project name to avoid conflicts with single checkouts.
       - cp react/.env.example react/.env
-      - echo "COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}-react" >> react/.env
+      - echo "COMPOSE_PROJECT_NAME={{.REACT_COMPOSE_PROJECT_NAME}}" >> react/.env
 
   react:link:
     dir: react
@@ -117,7 +119,8 @@ tasks:
   cms:clone:
     cmds:
       - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
-      - sed "s|COMPOSE_PROJECT_NAME=dpl-cms|COMPOSE_PROJECT_NAME=${COMPOSE_PROJECT_NAME}-cms|g" <cms/.env.example >cms/.env
+      # Set project name to avoid conflicts with single checkouts.
+      - sed "s|COMPOSE_PROJECT_NAME=dpl-cms|COMPOSE_PROJECT_NAME={{.CMS_COMPOSE_PROJECT_NAME}}|g" <cms/.env.example >cms/.env
 
   cms:link:
     dir: cms
