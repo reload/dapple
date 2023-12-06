@@ -6,8 +6,6 @@ vars:
   COMPOSE_PREFIX: dapple
   CMS_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-cms"
   REACT_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-react"
-
-vars:
   # Defaults
   DEFAULT_GIT_REPO_URL_DESIGN_SYSTEM: git@github.com:danskernesdigitalebibliotek/dpl-design-system
   DEFAULT_GIT_BRANCH_DESIGN_SYSTEM: develop
