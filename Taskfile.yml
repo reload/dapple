@@ -7,6 +7,25 @@ vars:
   CMS_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-cms"
   REACT_COMPOSE_PROJECT_NAME: "{{.COMPOSE_PREFIX}}-react"
 
+vars:
+  # Defaults
+  DEFAULT_GIT_REPO_URL_DESIGN_SYSTEM: git@github.com:danskernesdigitalebibliotek/dpl-design-system
+  DEFAULT_GIT_BRANCH_DESIGN_SYSTEM: develop
+  DEFAULT_GIT_REPO_URL_REACT: git@github.com:danskernesdigitalebibliotek/dpl-react
+  DEFAULT_GIT_BRANCH_REACT: develop
+  DEFAULT_GIT_REPO_URL_CMS: git@github.com:danskernesdigitalebibliotek/dpl-cms
+  DEFAULT_GIT_BRANCH_CMS: develop
+  # Actual values
+  GIT_REPO_URL_DESIGN_SYSTEM: '{{.GIT_REPO_URL_DESIGN_SYSTEM | default .DEFAULT_GIT_REPO_URL_DESIGN_SYSTEM}}'
+  GIT_BRANCH_DESIGN_SYSTEM: '{{.GIT_BRANCH_DESIGN_SYSTEM | default .DEFAULT_GIT_BRANCH_DESIGN_SYSTEM}}'
+  GIT_REPO_URL_REACT: '{{.GIT_REPO_URL_REACT | default .DEFAULT_GIT_REPO_URL_REACT}}'
+  GIT_BRANCH_REACT: '{{.GIT_BRANCH_REACT | default .DEFAULT_GIT_BRANCH_REACT}}'
+  GIT_REPO_URL_CMS: '{{.GIT_REPO_URL_CMS | default .DEFAULT_GIT_REPO_URL_CMS}}'
+  GIT_BRANCH_CMS: '{{.GIT_BRANCH_CMS | default .DEFAULT_GIT_BRANCH_CMS}}'
+
+# If vars are specified here they will override the defaults above.
+dotenv: ['.env']
+
 tasks:
   init:
     summary: Setup this directory for development
@@ -38,7 +57,7 @@ tasks:
 
   design-system:clone:
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-design-system design-system
+      - git clone {{ .GIT_REPO_URL_DESIGN_SYSTEM }} -b {{ .GIT_BRANCH_DESIGN_SYSTEM }} design-system
 
   design-system:install:
     dir: design-system
@@ -82,7 +101,7 @@ tasks:
 
   react:clone:
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-react react
+      - git clone {{ .GIT_REPO_URL_REACT}} -b {{ .GIT_BRANCH_REACT }} react
       # Set project name to avoid conflicts with single checkouts.
       - cp react/.env.example react/.env
       - echo "COMPOSE_PROJECT_NAME={{.REACT_COMPOSE_PROJECT_NAME}}" >> react/.env
@@ -133,7 +152,7 @@ tasks:
 
   cms:clone:
     cmds:
-      - git clone https://github.com/danskernesdigitalebibliotek/dpl-cms cms
+      - git clone {{ .GIT_REPO_URL_CMS }} -b {{ .GIT_BRANCH_CMS }} cms
       # Set project name to avoid conflicts with single checkouts.
       - sed "s|COMPOSE_PROJECT_NAME=dpl-cms|COMPOSE_PROJECT_NAME={{.CMS_COMPOSE_PROJECT_NAME}}|g" <cms/.env.example >cms/.env
 
