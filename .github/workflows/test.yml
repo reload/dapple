@@ -6,6 +6,9 @@ on:
 env:
   # Group output as we make heavy use of parallel and nested tasks.
   TASK_OUTPUT: "--output group --output-group-begin '::group::{{.TASK}}' --output-group-end '::endgroup::'"
+  GIT_REPO_URL_DESIGN_SYSTEM: https://github.com/danskernesdigitalebibliotek/dpl-design-system
+  GIT_REPO_URL_REACT: https://github.com/danskernesdigitalebibliotek/dpl-react
+  GIT_REPO_URL_CMS: https://github.com/danskernesdigitalebibliotek/dpl-cms
 
 jobs:
   test:
