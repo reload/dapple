@@ -6,7 +6,7 @@ Dapple is an attempt at providing a unified workflow for three DPL projects:
 - [React components](https://github.com/danskernesdigitalebibliotek/dpl-react)
 - [CMS](https://github.com/danskernesdigitalebibliotek/dpl-cms)
 
-These projects recide in separate repositories but are used by one another to 
+These projects recide in separate repositories but are used by one another to
 provide a complete application. While there is an established workflow for
 implementing changes which span multiple repositories, some processes may
 result in much back and forth between the individual parts. This can become
@@ -25,7 +25,7 @@ three projects with direct links between each of them.
 
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Task](https://taskfile.dev/#/installation)
-- Prerequisites required by the individual projects.
+- Prerequisites required by the individual projects. (the design system requires a personal access token when running `task init`. The task will fail if not present)
 
 ## Installation
 
