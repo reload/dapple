@@ -25,7 +25,7 @@ three projects with direct links between each of them.
 
 - [Docker Compose](https://docs.docker.com/compose/install/)
 - [Task](https://taskfile.dev/#/installation)
-- Prerequisites required by the individual projects. (the design system requires a personal access token when running `task init`. The task will fail if not present)
+- Prerequisites required by the individual projects. (the design system requires a personal access token when running `task init`. The task will fail if not present).
 
 ## Installation
 
