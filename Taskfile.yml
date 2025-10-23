@@ -172,7 +172,7 @@ tasks:
       - docker compose up -d
       - docker compose cp ../design-system/build/. php:/app/web/themes/custom/novel/assets/dpl-design-system
       - docker compose cp ../react/dist/. php:app/web/libraries/dpl-react
-      - task dev:cache:clear:all
+      - task dev:cache:clear:external
 
   cms:dev:
     dir: cms
